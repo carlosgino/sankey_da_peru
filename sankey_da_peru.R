@@ -117,20 +117,22 @@ sum(vuelta24$votos_validos)
 #organizando las macro regiones: Norte, tumbes, piura, lambayeque, cajamarca, la libertad
 
 norte <- c("TUMBES", "PIURA", "LAMBAYEQUE", "CAJAMARCA", "LA LIBERTAD")
-norte <- vuelta24 %>% filter(departamento %in% norte)
+norte <- vuelta24 %>% filter(departamento %in% norte) %>% 
+  mutate(macroregion = "norte")
   
+
 #Sur: Arequipa, Moquegua, Tacna, Cusco, Madre de Dios, Apurímac.
 
 sur <- c("AREQUIPA", "MOQUEGUA", "TACNA", "CUSCO", "MADRE DE DIOS", "APURIMAC", "PUNO")
-sur <-  vuelta24 %>%  filter(departamento %in% sur)
+sur <-  vuelta24 %>%  filter(departamento %in% sur) %>% mutate(macroregion = "sur")
 
 #Oriente: Loreto, Ucayali, Amazonas, San Martín. 
 
 oriente <- c("LORETO", "UCAYALI", "AMAZONAS", "SAN MARTIN")
-oriente<-  vuelta24 %>% filter(departamento %in% oriente)
+oriente<-  vuelta24 %>% filter(departamento %in% oriente) %>% mutate(macroregion = "oriente")
 
 ##Lima Metropolitana: Provincia Constitucional del Callao y provincia de Lima).
-limaycal <-  vuelta24 %>% filter(provincia  %in% c("LIMA", "CALLAO"))
+limaycal <-  vuelta24 %>% filter(provincia  %in% c("LIMA", "CALLAO")) %>% mutate(macroregion = "limaycal")
 
 #Centro: Lima ( excluye provincia de LIma), Ancash, Junín, Cerro de Pasco, Huánuco, Huancavelica, Ayacucho, Ica.  
 centro_p <- c("ANCASH", "JUNIN", "PASCO", "HUANUCO", "HUANCAVELICA", "AYACUCHO", "ICA") # + LIMA_REGION
@@ -141,16 +143,16 @@ LIMA_REGION <- anti_join( lima_dep, limaycal)
 centro_p <-  vuelta24 %>% group_by(departamento) %>% 
   filter(departamento %in% centro_p) 
 
-centro <- full_join(LIMA_REGION, centro_p)
+centro <- full_join(LIMA_REGION, centro_p) %>% mutate(macroregion = "centro")
  
  
 #exterior: peruanos residentes en los cinco continentes
 exterior <- c("AFRICA", "AMERICA", "ASIA", "EUROPA", "OCEANIA")
 
-exterior <- vuelta24 %>% filter(departamento %in% exterior)
+exterior <- vuelta24 %>% filter(departamento %in% exterior) %>% mutate(macroregion = "exterior")
 
 #rm(lima_dep);rm(centro_p); rm(LIMA_REGION)
 
-
+full_vuelta24 <- bind_rows(oriente, norte,centro,limaycal,sur, exterior)
 
 
